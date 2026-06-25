@@ -1,5 +1,6 @@
 package com.webservices.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.webservices.ecommerce.enums.ProductStatus;
 import jakarta.persistence.*;
 
@@ -25,10 +26,12 @@ public class Produto implements Serializable {
     @OneToMany(mappedBy = "id.produto")
     private Set<ItemPedido> itens = new HashSet<>();
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "TB_PRODUCT_TAG",

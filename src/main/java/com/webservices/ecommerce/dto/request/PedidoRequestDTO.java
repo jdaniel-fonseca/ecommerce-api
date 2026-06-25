@@ -1,0 +1,17 @@
+package com.webservices.ecommerce.dto.request;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Set;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class PedidoRequestDTO {
+
+    private Long clienteId;
+    private Set<ItemPedidoRequestDTO> itens;
+
+}

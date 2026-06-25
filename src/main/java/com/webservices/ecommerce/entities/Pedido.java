@@ -1,4 +1,5 @@
 package com.webservices.ecommerce.entities;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.webservices.ecommerce.enums.OrderStatus;
 import jakarta.persistence.*;
 
@@ -23,6 +24,7 @@ public class Pedido implements Serializable {
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "id.pedido")
     private Set<ItemPedido> itens = new HashSet<>();
 

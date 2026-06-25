@@ -16,6 +16,7 @@ public class Cliente implements Serializable {
     private String name;
     private String email;
     private String telefone;
+    private String password;
     private Instant criadoEm;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -29,12 +30,13 @@ public class Cliente implements Serializable {
     public Cliente() {
     }
 
-    public Cliente(Long id, String name, String email, String telefone, Instant criadoEm, Endereco endereco) {
+    public Cliente(Long id, String name, String email, String telefone, String password, Instant criadoEm, Endereco endereco) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.telefone = telefone;
         this.criadoEm = criadoEm;
+        this.password = password;
         this.endereco = endereco;
     }
 
@@ -77,6 +79,11 @@ public class Cliente implements Serializable {
     public void setCriadoEm(Instant criadoEm) {
         this.criadoEm = criadoEm;
     }
+
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {}
 
     public Endereco getEndereco() {
         return endereco;
