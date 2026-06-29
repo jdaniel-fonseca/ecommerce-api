@@ -1,9 +1,6 @@
 package com.webservices.ecommerce.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -21,7 +18,8 @@ public class Endereco implements Serializable {
     private String estado;
     private String cep;
 
-    @OneToOne(mappedBy = "endereco")
+    @OneToOne
+    @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
     public Endereco() {}

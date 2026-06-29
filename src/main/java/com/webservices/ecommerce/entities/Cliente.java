@@ -19,8 +19,7 @@ public class Cliente implements Serializable {
     private String password;
     private Instant criadoEm;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "endereco_id")
+    @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL)
     private Endereco endereco;
 
     @OneToMany(mappedBy = "cliente")
