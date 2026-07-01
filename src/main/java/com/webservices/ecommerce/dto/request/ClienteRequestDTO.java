@@ -12,6 +12,6 @@ public class ClienteRequestDTO {
     private String email;
     private String telefone;
     private String senha;
-    private EnderecoRequestDTO endereco;
+    private EnderecoRequestDTO enderecoRequestDTO;
 
 }
