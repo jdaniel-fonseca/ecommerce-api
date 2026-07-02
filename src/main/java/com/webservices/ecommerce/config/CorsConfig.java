@@ -1,4 +1,4 @@
-package com.webservices.ecommerce.test;
+package com.webservices.ecommerce.config;
 
 import org.springframework.context.annotation.Configuration;
 

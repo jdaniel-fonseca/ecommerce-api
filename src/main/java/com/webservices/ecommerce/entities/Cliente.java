@@ -29,12 +29,12 @@ public class Cliente implements Serializable {
     public Cliente() {
     }
 
-    public Cliente(Long id, String name, String email, String telefone, String password, Instant criadoEm, Endereco endereco) {
+    public Cliente(Long id, String name, String email, String telefone, String password, Endereco endereco) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.telefone = telefone;
-        this.criadoEm = criadoEm;
+        this.criadoEm = Instant.now();
         this.password = password;
         this.endereco = endereco;
     }
@@ -82,7 +82,10 @@ public class Cliente implements Serializable {
     public String getPassword() {
         return password;
     }
-    public void setPassword(String password) {}
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public Endereco getEndereco() {
         return endereco;

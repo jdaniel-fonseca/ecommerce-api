@@ -1,4 +1,4 @@
-package com.webservices.ecommerce.test;
+package com.webservices.ecommerce.config;
 
 import com.webservices.ecommerce.dto.request.EnderecoRequestDTO;
 import com.webservices.ecommerce.services.EnderecoService;

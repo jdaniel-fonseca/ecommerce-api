@@ -34,9 +34,9 @@ public class Pedido implements Serializable {
     public Pedido() {
     }
 
-    public Pedido(Long id, Instant instante, OrderStatus orderStatus, Cliente cliente, Pagamento pagamento) {
+    public Pedido(Long id, OrderStatus orderStatus, Cliente cliente, Pagamento pagamento) {
         this.id = id;
-        this.instante = instante;
+        this.instante = Instant.now();
         setOrderStatus(orderStatus);
         this.cliente = cliente;
         this.pagamento = pagamento;

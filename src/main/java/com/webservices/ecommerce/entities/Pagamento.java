@@ -26,9 +26,9 @@ public class Pagamento implements Serializable {
     public Pagamento() {
     }
 
-    public Pagamento(Long id, Instant momentoPagamento, BigDecimal valorPago, PaymentStatus paymentStatus, Pedido pedido) {
+    public Pagamento(Long id, BigDecimal valorPago, PaymentStatus paymentStatus, Pedido pedido) {
         this.id = id;
-        this.momentoPagamento = momentoPagamento;
+        this.momentoPagamento = Instant.now();
         this.valorPago = valorPago;
         setPaymentStatus(paymentStatus);
         this.pedido = pedido;
