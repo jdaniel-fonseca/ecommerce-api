@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Data
@@ -13,5 +14,6 @@ public class PedidoRequestDTO {
 
     private Long clienteId;
     private Set<ItemPedidoRequestDTO> itens;
+    private PagamentoRequestDTO pagamento;
 
 }

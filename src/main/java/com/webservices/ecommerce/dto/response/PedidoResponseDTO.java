@@ -1,7 +1,6 @@
 package com.webservices.ecommerce.dto.response;
 
 import com.webservices.ecommerce.entities.ItemPedido;
-import com.webservices.ecommerce.entities.Pagamento;
 import com.webservices.ecommerce.entities.Pedido;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,5 +1,6 @@
 package com.webservices.ecommerce.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.webservices.ecommerce.dto.request.ItemPedidoRequestDTO;
 import com.webservices.ecommerce.enums.OrderStatus;
 import jakarta.persistence.*;
 
@@ -78,6 +79,10 @@ public class Pedido implements Serializable {
 
     public Set<ItemPedido> getItens() {
         return itens;
+    }
+
+    public void addItem(ItemPedidoRequestDTO itemPedidoRequestDTO) {
+
     }
 
     public Pagamento getPagamento() {

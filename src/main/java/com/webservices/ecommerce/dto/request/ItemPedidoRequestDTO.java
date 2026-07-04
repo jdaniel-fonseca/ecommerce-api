@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class ItemPedidoRequestDTO {
 
     private Long produtoId;
-    private Long quantidade;
+    private Integer quantidade;
 }
