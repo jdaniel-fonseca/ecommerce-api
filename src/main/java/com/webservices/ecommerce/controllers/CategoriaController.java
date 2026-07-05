@@ -48,7 +48,7 @@ public class CategoriaController {
         return ResponseEntity.created(uri).body(categoriaResponseDTO);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         categoriaService.deleteById(id);
         return ResponseEntity.noContent().build();

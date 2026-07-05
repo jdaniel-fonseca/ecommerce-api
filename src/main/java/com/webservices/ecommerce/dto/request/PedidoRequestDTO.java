@@ -1,5 +1,6 @@
 package com.webservices.ecommerce.dto.request;
 
+import com.webservices.ecommerce.enums.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,5 +16,6 @@ public class PedidoRequestDTO {
     private Long clienteId;
     private Set<ItemPedidoRequestDTO> itens;
     private PagamentoRequestDTO pagamento;
+    private OrderStatus orderStatus;
 
 }

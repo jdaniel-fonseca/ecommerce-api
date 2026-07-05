@@ -23,7 +23,7 @@ public class EnderecoService {
         List<EnderecoResponseDTO> enderecosResponseDTO = new ArrayList<>();
 
         for(Endereco endereco : enderecos) {
-            enderecosResponseDTO.add(responseDtoConverter(endereco));
+            enderecosResponseDTO.add(new EnderecoResponseDTO(endereco));
         }
         return enderecosResponseDTO;
     }
@@ -38,7 +38,7 @@ public class EnderecoService {
     public EnderecoResponseDTO save(EnderecoRequestDTO enderecoRequestDTO) {
         Endereco endereco = requestDtoConverter(enderecoRequestDTO);
         Endereco enderecoSalvo = enderecoRepository.save(endereco);
-        return responseDtoConverter(enderecoSalvo);
+        return new EnderecoResponseDTO(enderecoSalvo);
     }
 
     public void deleteById(Long id) {
@@ -49,8 +49,8 @@ public class EnderecoService {
         Endereco endereco = enderecoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Endereço não encontrado"));
         updateData(enderecoRequestDTO, endereco);
-        Endereco enderecoSalvo = enderecoRepository.save(endereco);
-        return responseDtoConverter(enderecoSalvo);
+
+        return new EnderecoResponseDTO(endereco);
     }
 
     private void updateData(EnderecoRequestDTO enderecoRequestDTO, Endereco endereco) {
@@ -59,10 +59,6 @@ public class EnderecoService {
         endereco.setRua(enderecoRequestDTO.getRua());
         endereco.setCidade(enderecoRequestDTO.getCidade());
         endereco.setEstado(enderecoRequestDTO.getEstado());
-    }
-
-    private EnderecoResponseDTO responseDtoConverter(Endereco endereco) {
-        return new EnderecoResponseDTO(endereco);
     }
 
     private Endereco requestDtoConverter(EnderecoRequestDTO enderecoRequestDTO) {

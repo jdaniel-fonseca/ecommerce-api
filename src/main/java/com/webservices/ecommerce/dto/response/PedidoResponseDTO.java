@@ -2,6 +2,7 @@ package com.webservices.ecommerce.dto.response;
 
 import com.webservices.ecommerce.entities.ItemPedido;
 import com.webservices.ecommerce.entities.Pedido;
+import com.webservices.ecommerce.enums.OrderStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +17,7 @@ public class PedidoResponseDTO {
 
     private Long id;
     private Instant instante;
-    private Integer orderStatus;
+    private OrderStatus orderStatus;
     private ClienteResponseDTO cliente;
     private Set<ItemPedidoResponseDTO> itens = new HashSet<ItemPedidoResponseDTO>();
     private PagamentoResponseDTO pagamento;

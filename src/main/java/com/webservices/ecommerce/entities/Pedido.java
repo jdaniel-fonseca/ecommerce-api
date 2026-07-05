@@ -26,7 +26,7 @@ public class Pedido implements Serializable {
     private Cliente cliente;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "id.pedido")
+    @OneToMany(mappedBy = "id.pedido", cascade = CascadeType.ALL)
     private Set<ItemPedido> itens = new HashSet<>();
 
     @OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL)
@@ -59,7 +59,7 @@ public class Pedido implements Serializable {
         this.instante = instante;
     }
 
-    public Integer getOrderStatus() {
+    public OrderStatus getOrderStatus() {
         return orderStatus;
     }
 
