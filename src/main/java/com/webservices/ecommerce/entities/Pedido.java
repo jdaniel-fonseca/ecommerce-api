@@ -59,8 +59,8 @@ public class Pedido implements Serializable {
         this.instante = instante;
     }
 
-    public OrderStatus getOrderStatus() {
-        return orderStatus;
+    public Integer getOrderStatus() {
+        return this.orderStatus;
     }
 
     public void setOrderStatus(OrderStatus orderStatus) {

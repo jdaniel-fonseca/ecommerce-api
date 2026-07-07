@@ -26,7 +26,7 @@ public class PedidoResponseDTO {
     public PedidoResponseDTO(Pedido pedido) {
         this.id = pedido.getId();
         this.instante = pedido.getInstante();
-        this.orderStatus = pedido.getOrderStatus();
+        this.orderStatus = OrderStatus.valueOf(pedido.getOrderStatus());
         this.cliente = new ClienteResponseDTO(pedido.getCliente());
 
         for (ItemPedido item : pedido.getItens()) {
