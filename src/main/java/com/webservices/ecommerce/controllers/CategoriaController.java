@@ -40,7 +40,7 @@ public class CategoriaController {
 
     @PostMapping
     public ResponseEntity<CategoriaResponseDTO> insert(@RequestBody CategoriaRequestDTO categoriaRequestDTO) {
-        CategoriaResponseDTO categoriaResponseDTO = categoriaService.save(categoriaRequestDTO);
+        CategoriaResponseDTO categoriaResponseDTO = categoriaService.create(categoriaRequestDTO);
         URI uri =  ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(categoriaResponseDTO.getId())

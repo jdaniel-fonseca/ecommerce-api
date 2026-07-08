@@ -38,7 +38,7 @@ public class EnderecoService {
         return new EnderecoResponseDTO(endereco);
     }
 
-    public EnderecoResponseDTO save(EnderecoRequestDTO enderecoRequestDTO) {
+    public EnderecoResponseDTO create(EnderecoRequestDTO enderecoRequestDTO) {
         Endereco endereco = requestDtoConverter(enderecoRequestDTO);
         Endereco enderecoSalvo = enderecoRepository.save(endereco);
         return new EnderecoResponseDTO(enderecoSalvo);

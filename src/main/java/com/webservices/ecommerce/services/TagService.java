@@ -38,7 +38,7 @@ public class TagService {
         return new TagResponseDTO(tag);
     }
 
-    public TagResponseDTO insert(TagRequestDTO tagRequestDTO) {
+    public TagResponseDTO create(TagRequestDTO tagRequestDTO) {
         Tag tag = tagRepository.save(converter(tagRequestDTO));
         return new TagResponseDTO(tag);
     }

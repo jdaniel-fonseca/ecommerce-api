@@ -40,7 +40,7 @@ public class TagController {
 
     @PostMapping
     public ResponseEntity<TagResponseDTO> save(@RequestBody TagRequestDTO tagRequestDTO) {
-        TagResponseDTO tagResponseDTO = tagService.insert(tagRequestDTO);
+        TagResponseDTO tagResponseDTO = tagService.create(tagRequestDTO);
         URI uri = ServletUriComponentsBuilder.
                 fromCurrentRequest()
                 .path("/{id}")

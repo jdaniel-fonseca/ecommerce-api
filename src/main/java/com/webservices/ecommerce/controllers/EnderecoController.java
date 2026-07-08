@@ -38,7 +38,7 @@ public class EnderecoController {
 
     @PostMapping
     public ResponseEntity<EnderecoResponseDTO> create(@RequestBody EnderecoRequestDTO enderecoRequestDTO) {
-        EnderecoResponseDTO enderecoResponseDTO = enderecoService.save(enderecoRequestDTO);
+        EnderecoResponseDTO enderecoResponseDTO = enderecoService.create(enderecoRequestDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").
                 buildAndExpand(enderecoResponseDTO.getId()).toUri();
         return ResponseEntity.created(uri).body(enderecoResponseDTO);

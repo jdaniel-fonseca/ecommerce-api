@@ -26,19 +26,19 @@ public class ClienteController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ClienteResponseDTO> getClientesById(@PathVariable Long id){
-        ClienteResponseDTO clienteResponseDTO = clienteService.findClienteById(id);
+        ClienteResponseDTO clienteResponseDTO = clienteService.findById(id);
         return ResponseEntity.ok().body(clienteResponseDTO);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ClienteResponseDTO> update(@PathVariable Long id, @RequestBody ClienteRequestDTO clienteRequestDTO){
-        ClienteResponseDTO cliente = clienteService.updateCliente(clienteRequestDTO, id);
+        ClienteResponseDTO cliente = clienteService.update(clienteRequestDTO, id);
         return ResponseEntity.ok().body(cliente);
     }
 
     @PostMapping
     public ResponseEntity<ClienteResponseDTO> create(@RequestBody ClienteRequestDTO clienteRequestDTO){
-        ClienteResponseDTO clienteResponseDTO = clienteService.createCliente(clienteRequestDTO);
+        ClienteResponseDTO clienteResponseDTO = clienteService.create(clienteRequestDTO);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}")
                 .buildAndExpand(clienteResponseDTO.getId())
@@ -48,7 +48,7 @@ public class ClienteController {
 
     @DeleteMapping
     public ResponseEntity<Void> deleteById(@PathVariable Long id){
-        clienteService.deleteClienteById(id);
+        clienteService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }
