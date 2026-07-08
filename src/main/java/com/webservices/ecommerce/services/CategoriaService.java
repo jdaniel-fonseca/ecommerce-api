@@ -3,7 +3,10 @@ package com.webservices.ecommerce.services;
 import com.webservices.ecommerce.dto.request.CategoriaRequestDTO;
 import com.webservices.ecommerce.dto.response.CategoriaResponseDTO;
 import com.webservices.ecommerce.entities.Categoria;
+import com.webservices.ecommerce.exceptions.DatabaseException;
+import com.webservices.ecommerce.exceptions.ResourceNotFoundException;
 import com.webservices.ecommerce.repositories.CategoriaRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,19 +38,26 @@ public class CategoriaService {
         return new CategoriaResponseDTO(categoria);
     }
 
-    public CategoriaResponseDTO save(CategoriaRequestDTO categoriaRequestDTO) {
-        Categoria endereco = requestDtoConverter(categoriaRequestDTO);
-        Categoria categoriaSalvo = categoriaRepository.save(endereco);
+    public CategoriaResponseDTO create(CategoriaRequestDTO categoriaRequestDTO) {
+        Categoria categoria = requestDtoConverter(categoriaRequestDTO);
+        Categoria categoriaSalvo = categoriaRepository.save(categoria);
         return responseDtoConverter(categoriaSalvo);
     }
 
     public void deleteById(Long id) {
-        this.categoriaRepository.deleteById(id);
+        try {
+        Categoria categoria = categoriaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id));
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
+        }
+
     }
 
     public CategoriaResponseDTO update(CategoriaRequestDTO categoriaRequestDTO, Long id){
         Categoria categoria = categoriaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Endereço não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException(id));
         updateData(categoriaRequestDTO, categoria);
         Categoria categoriaSalvo = categoriaRepository.save(categoria);
         return responseDtoConverter(categoriaSalvo);

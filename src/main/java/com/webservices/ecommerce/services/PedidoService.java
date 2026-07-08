@@ -5,7 +5,10 @@ import com.webservices.ecommerce.dto.request.PedidoRequestDTO;
 import com.webservices.ecommerce.dto.response.PedidoResponseDTO;
 import com.webservices.ecommerce.entities.*;
 import com.webservices.ecommerce.enums.PaymentStatus;
+import com.webservices.ecommerce.exceptions.DatabaseException;
+import com.webservices.ecommerce.exceptions.ResourceNotFoundException;
 import com.webservices.ecommerce.repositories.*;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,28 +41,38 @@ public class PedidoService {
 
     public PedidoResponseDTO findById(Long id) {
         Pedido pedido = pedidoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException(id));
         return new PedidoResponseDTO(pedido);
     }
 
     @Transactional
     public PedidoResponseDTO create(PedidoRequestDTO pedidoRequestDTO) {
-        Pedido pedido = pedidoRepository.save(requestConverter(pedidoRequestDTO));
-        return new PedidoResponseDTO(pedido);
+        try {
+            Pedido pedido = pedidoRepository.save(requestConverter(pedidoRequestDTO));
+            return new PedidoResponseDTO(pedido);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
+        }
     }
 
     @Transactional
     public void deleteById(Long id) {
-        Pedido pedido = pedidoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido não encontrado."));
+        try {
+            Pedido pedido = pedidoRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException(id));
 
-        pedidoRepository.delete(pedido);
+            pedidoRepository.delete(pedido);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
+        }
     }
 
     @Transactional
     public PedidoResponseDTO update(PedidoRequestDTO pedidoRequestDTO, Long id) {
         Pedido pedido = pedidoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException(id));
 
         updateData(pedido, pedidoRequestDTO);
 
@@ -69,7 +82,7 @@ public class PedidoService {
     private Pedido requestConverter(PedidoRequestDTO pedidoRequestDTO) {
         Pedido pedido = new Pedido();
         Cliente cliente = clienteRepository.findById(pedidoRequestDTO.getClienteId())
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException(pedidoRequestDTO.getClienteId()));
         pedido.setCliente(cliente);
 
         if (pedidoRequestDTO.getPagamento() != null) {
@@ -85,7 +98,7 @@ public class PedidoService {
         for (ItemPedidoRequestDTO itemPedidoRequestDTO : itemPedidoRequestDTOS) {
             ItemPedido item = new ItemPedido();
             Produto produto = produtoRepository.findById(itemPedidoRequestDTO.getProdutoId())
-                    .orElseThrow(() -> new RuntimeException("Produto não encontrado."));
+                    .orElseThrow(() -> new ResourceNotFoundException(itemPedidoRequestDTO.getProdutoId()));
             item.setQuantidade(itemPedidoRequestDTO.getQuantidade());
             item.setPedido(pedido);
             item.setProduto(produto);
@@ -98,7 +111,7 @@ public class PedidoService {
 
     private void updateData(Pedido pedido, PedidoRequestDTO dto) {
         Cliente cliente = clienteRepository.findById(dto.getClienteId())
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException(dto.getClienteId()));
 
         pedido.setCliente(cliente);
 

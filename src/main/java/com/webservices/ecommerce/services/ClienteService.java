@@ -5,7 +5,10 @@ import com.webservices.ecommerce.dto.request.EnderecoRequestDTO;
 import com.webservices.ecommerce.dto.response.ClienteResponseDTO;
 import com.webservices.ecommerce.entities.Cliente;
 import com.webservices.ecommerce.entities.Endereco;
+import com.webservices.ecommerce.exceptions.DatabaseException;
+import com.webservices.ecommerce.exceptions.ResourceNotFoundException;
 import com.webservices.ecommerce.repositories.ClienteRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,7 +34,7 @@ public class ClienteService {
         return clienteResponseDTOS;
     }
 
-    public ClienteResponseDTO findClienteById(Long id) {
+    public ClienteResponseDTO findById(Long id) {
         Optional<Cliente> cliente = clienteRepository.findById(id);
         if (cliente.isPresent()) {
             return new ClienteResponseDTO(cliente.get());
@@ -39,21 +42,29 @@ public class ClienteService {
         return null;
     }
 
-    public ClienteResponseDTO createCliente(ClienteRequestDTO clienteRequestDTO) {
+    public ClienteResponseDTO create(ClienteRequestDTO clienteRequestDTO) {
         Cliente cliente = convertClientRequest(clienteRequestDTO);
         Cliente clienteSalvo = clienteRepository.save(cliente);
         return new ClienteResponseDTO(clienteSalvo);
     }
 
-    public ClienteResponseDTO updateCliente(ClienteRequestDTO clienteRequestDTO, Long id) {
+    public ClienteResponseDTO update(ClienteRequestDTO clienteRequestDTO, Long id) {
         Cliente cliente = clienteRepository.findById(id).orElse(null);
         updateData(clienteRequestDTO, cliente);
         Cliente clienteSalvo = clienteRepository.save(cliente);
         return new ClienteResponseDTO(clienteSalvo);
     }
 
-    public void deleteClienteById(Long id) {
-        clienteRepository.deleteById(id);
+    public void deleteById(Long id) {
+        try {
+            Cliente cliente = clienteRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException(id));
+
+            clienteRepository.delete(cliente);
+        }
+        catch (DataIntegrityViolationException e){
+            throw new DatabaseException(e.getMessage());
+        }
     }
 
     private ClienteResponseDTO convertClientResponse(Cliente cliente) {

@@ -5,9 +5,12 @@ import com.webservices.ecommerce.dto.response.PagamentoResponseDTO;
 import com.webservices.ecommerce.entities.Pagamento;
 import com.webservices.ecommerce.entities.Pedido;
 import com.webservices.ecommerce.enums.PaymentStatus;
+import com.webservices.ecommerce.exceptions.DatabaseException;
+import com.webservices.ecommerce.exceptions.ResourceNotFoundException;
 import com.webservices.ecommerce.repositories.PagamentoRepository;
 import com.webservices.ecommerce.repositories.PedidoRepository;
 import jakarta.persistence.*;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -36,14 +39,14 @@ public class PagamentoService {
 
     public PagamentoResponseDTO findById(Long id) {
         Pagamento pagamento = pagamentoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pagamento não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException(id));
 
         return new PagamentoResponseDTO(pagamento);
     }
 
     public PagamentoResponseDTO update(PagamentoRequestDTO pagamentoRequestDTO, Long id) {
         Pagamento pagamento = pagamentoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pagamento não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException(id));
 
         updateData(pagamentoRequestDTO, pagamento);
         return new PagamentoResponseDTO(pagamento);
@@ -56,16 +59,21 @@ public class PagamentoService {
     }
 
     public void deleteById(Long id) {
-        Pagamento pagamento = pagamentoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pagamento não encontrado."));
+        try {
+            Pagamento pagamento = pagamentoRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException(id));
 
-        pagamentoRepository.delete(pagamento);
+            pagamentoRepository.delete(pagamento);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
+        }
     }
 
     private void updateData(PagamentoRequestDTO pagamentoRequestDTO, Pagamento pagamento) {
 
         Pedido pedido = pedidoRepository.findById(pagamentoRequestDTO.getPedidoId())
-                .orElseThrow(() -> new RuntimeException("Pedido não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException(pagamentoRequestDTO.getPedidoId()));
         pagamento.setPedido(pedido);
 
         pagamento.setValorPago(pagamentoRequestDTO.getValorPago());
@@ -74,7 +82,7 @@ public class PagamentoService {
     private Pagamento convertRequestDto(PagamentoRequestDTO pagamentoRequestDTO) {
         Pagamento pagamento = new Pagamento();
         Pedido pedido = pedidoRepository.findById(pagamento.getId())
-                .orElseThrow(() -> new RuntimeException("Pedido não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException(pagamento.getId()));
 
         pagamento.setPedido(pedido);
 
@@ -88,18 +96,4 @@ public class PagamentoService {
 
         return pagamento;
     }
-
-/*
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Instant momentoPagamento;
-    private BigDecimal valorPago;
-    private Integer paymentStatus;
-
-    @OneToOne
-    @JoinColumn(name = "pedido_id")
-    private Pedido pedido;
- */
-
 }

@@ -3,7 +3,11 @@ package com.webservices.ecommerce.services;
 import com.webservices.ecommerce.dto.request.TagRequestDTO;
 import com.webservices.ecommerce.dto.response.TagResponseDTO;
 import com.webservices.ecommerce.entities.Tag;
+import com.webservices.ecommerce.exceptions.DatabaseException;
+import com.webservices.ecommerce.exceptions.ResourceNotFoundException;
 import com.webservices.ecommerce.repositories.TagRepository;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,6 +25,7 @@ public class TagService {
     public List<TagResponseDTO> findAll() {
         List<Tag> tags  = tagRepository.findAll();
         List<TagResponseDTO> tagResponseDTOs = new ArrayList<>();
+
         for (Tag tag : tags) {
             tagResponseDTOs.add(new TagResponseDTO(tag));
         }
@@ -29,7 +34,7 @@ public class TagService {
 
     public TagResponseDTO findById(Long id) {
         Tag tag =  tagRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Tag não encontrada."));
+                .orElseThrow(() -> new ResourceNotFoundException(id));
         return new TagResponseDTO(tag);
     }
 
@@ -40,13 +45,21 @@ public class TagService {
 
     public TagResponseDTO update(TagRequestDTO tagRequestDTO, Long id) {
         Tag tag = tagRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Tag não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException(id));
         updateData(tagRequestDTO, tag);
         return  new TagResponseDTO(tag);
     }
 
     public void delete(Long id) {
-        tagRepository.deleteById(id);
+        try {
+            tagRepository.deleteById(id);
+        }
+        catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException(id);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
+        }
     }
 
     private Tag converter(TagRequestDTO tagRequestDTO) {

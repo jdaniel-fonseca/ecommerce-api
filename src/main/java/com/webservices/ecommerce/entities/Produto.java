@@ -26,19 +26,19 @@ public class Produto implements Serializable {
     @OneToMany(mappedBy = "id.produto")
     private Set<ItemPedido> itens = new HashSet<>();
 
-    @JsonIgnore
+
     @ManyToOne
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
 
-    @JsonIgnore
+
     @ManyToMany
     @JoinTable(
             name = "TB_PRODUCT_TAG",
             joinColumns = @JoinColumn(name = "produto_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    Set<Tag> tags = new HashSet<>();
+    private Set<Tag> tags = new HashSet<>();
 
     public Produto() {
     }

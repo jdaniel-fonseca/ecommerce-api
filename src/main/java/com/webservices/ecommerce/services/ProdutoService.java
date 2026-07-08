@@ -6,9 +6,13 @@ import com.webservices.ecommerce.dto.response.TagResponseDTO;
 import com.webservices.ecommerce.entities.Categoria;
 import com.webservices.ecommerce.entities.Produto;
 import com.webservices.ecommerce.entities.Tag;
+import com.webservices.ecommerce.exceptions.DatabaseException;
+import com.webservices.ecommerce.exceptions.ResourceNotFoundException;
 import com.webservices.ecommerce.repositories.CategoriaRepository;
 import com.webservices.ecommerce.repositories.ProdutoRepository;
 import com.webservices.ecommerce.repositories.TagRepository;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -40,19 +44,28 @@ public class ProdutoService {
 
     public ProdutoResponseDTO findById(Long id) {
         Produto produto = produtoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não cadastrado."));
+                .orElseThrow(() -> new ResourceNotFoundException(id));
         return new ProdutoResponseDTO(produto);
     }
 
     public void deleteById(Long id) {
-        Produto produto = produtoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado."));
-        produtoRepository.delete(produto);
+        try {
+            Produto produto = produtoRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException(id));
+
+            produtoRepository.delete(produto);
+        }
+        catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException(id);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
+        }
     }
 
     public ProdutoResponseDTO update(ProdutoRequestDTO produtoRequestDTO, Long id) {
         Produto produto = produtoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException(id));
         updateData(produtoRequestDTO, produto);
 
         return new  ProdutoResponseDTO(produto);
@@ -71,18 +84,21 @@ public class ProdutoService {
         produto.setProductStatus(produtoRequestDTO.getStatus());
         produto.setEstoque(produtoRequestDTO.getEstoque());
 
-        Set<Tag> tags = new HashSet<>();
+        if (produtoRequestDTO.getTagId() != null) {
 
-        for (Long tagIds : produtoRequestDTO.getTagId()) {
-            Tag tag = tagRepository.findById(tagIds)
-                    .orElseThrow(() -> new RuntimeException("Tag não encontrada."));
-            tags.add(tag);
+            Set<Tag> tags = new HashSet<>();
+
+            for (Long tagIds : produtoRequestDTO.getTagId()) {
+                Tag tag = tagRepository.findById(tagIds)
+                        .orElseThrow(() -> new ResourceNotFoundException(tagIds));
+                tags.add(tag);
+            }
+
+            produto.getTags().addAll(tags);
         }
 
-        produto.getTags().addAll(tags);
-
         Categoria categoria = categoriaRepository.findById(produtoRequestDTO.getCategoriaId())
-                .orElseThrow(() -> new RuntimeException("Categoria nã o encontrada."));
+                .orElseThrow(() -> new ResourceNotFoundException(produtoRequestDTO.getCategoriaId()));
 
         produto.setCategoria(categoria);
 
@@ -100,12 +116,12 @@ public class ProdutoService {
 
         for (Long tagIds : produtoRequestDTO.getTagId()) {
             Tag tag = tagRepository.findById(tagIds)
-                    .orElseThrow(() -> new RuntimeException("Tag não encontrada."));
+                    .orElseThrow(() -> new ResourceNotFoundException(tagIds));
                     tags.add(tag);
         }
 
         Categoria categoria = categoriaRepository.findById(produtoRequestDTO.getCategoriaId())
-                .orElseThrow(() -> new RuntimeException("Categoria não encontrada,"));
+                .orElseThrow(() -> new ResourceNotFoundException(produtoRequestDTO.getCategoriaId()));
 
         produto.setCategoria(categoria);
     }

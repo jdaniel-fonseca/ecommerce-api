@@ -2,7 +2,10 @@ package com.webservices.ecommerce.services;
 import com.webservices.ecommerce.dto.request.EnderecoRequestDTO;
 import com.webservices.ecommerce.dto.response.EnderecoResponseDTO;
 import com.webservices.ecommerce.entities.Endereco;
+import com.webservices.ecommerce.exceptions.DatabaseException;
+import com.webservices.ecommerce.exceptions.ResourceNotFoundException;
 import com.webservices.ecommerce.repositories.EnderecoRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,7 +33,7 @@ public class EnderecoService {
 
     public EnderecoResponseDTO findById(Long id) {
         Endereco endereco = this.enderecoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Endereço não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException(id));
 
         return new EnderecoResponseDTO(endereco);
     }
@@ -42,15 +45,27 @@ public class EnderecoService {
     }
 
     public void deleteById(Long id) {
-        this.enderecoRepository.deleteById(id);
+        try {
+            Endereco endereco = enderecoRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException(id));
+            enderecoRepository.delete(endereco);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
+        }
     }
 
     public EnderecoResponseDTO update(EnderecoRequestDTO enderecoRequestDTO, Long id){
-        Endereco endereco = enderecoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Endereço não encontrado"));
-        updateData(enderecoRequestDTO, endereco);
+        try {
+            Endereco endereco = enderecoRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException(id));
+            updateData(enderecoRequestDTO, endereco);
 
-        return new EnderecoResponseDTO(endereco);
+            return new EnderecoResponseDTO(endereco);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
+        }
     }
 
     private void updateData(EnderecoRequestDTO enderecoRequestDTO, Endereco endereco) {
