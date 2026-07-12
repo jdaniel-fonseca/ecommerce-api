@@ -3,6 +3,9 @@ package com.webservices.ecommerce.controllers;
 import com.webservices.ecommerce.dto.request.CategoriaRequestDTO;
 import com.webservices.ecommerce.dto.response.CategoriaResponseDTO;
 import com.webservices.ecommerce.services.CategoriaService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -21,8 +24,8 @@ public class CategoriaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoriaResponseDTO>> findAll() {
-        List<CategoriaResponseDTO> categorias = categoriaService.findAll();
+    public ResponseEntity<Page<CategoriaResponseDTO>> findAll(@PageableDefault(size = 10, sort = "nome") Pageable pageable) {
+        Page<CategoriaResponseDTO> categorias = categoriaService.findAll(pageable);
         return ResponseEntity.ok().body(categorias);
     }
 

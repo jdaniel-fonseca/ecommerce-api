@@ -2,7 +2,6 @@ package com.webservices.ecommerce.services;
 
 import com.webservices.ecommerce.dto.request.ProdutoRequestDTO;
 import com.webservices.ecommerce.dto.response.ProdutoResponseDTO;
-import com.webservices.ecommerce.dto.response.TagResponseDTO;
 import com.webservices.ecommerce.entities.Categoria;
 import com.webservices.ecommerce.entities.Produto;
 import com.webservices.ecommerce.entities.Tag;

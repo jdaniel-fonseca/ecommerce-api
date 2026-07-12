@@ -22,7 +22,7 @@ public class TestConfig implements CommandLineRunner {
         enderecoRequestDTO.setCep("94566-192");
         enderecoRequestDTO.setNumero("356");
         enderecoRequestDTO.setRua("Rua Cristal");
-        enderecoService.save(enderecoRequestDTO);
+        enderecoService.create(enderecoRequestDTO);
 
         EnderecoRequestDTO enderecoRequestDTO2 = new EnderecoRequestDTO();
         enderecoRequestDTO2.setCidade("Osasco");
@@ -30,6 +30,6 @@ public class TestConfig implements CommandLineRunner {
         enderecoRequestDTO2.setCep("64566-192");
         enderecoRequestDTO2.setNumero("226");
         enderecoRequestDTO2.setRua("Rua Getúlio Vargas");
-        enderecoService.save(enderecoRequestDTO2);
+        enderecoService.create(enderecoRequestDTO2);
     }
 }
