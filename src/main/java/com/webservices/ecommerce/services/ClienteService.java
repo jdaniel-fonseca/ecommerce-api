@@ -9,6 +9,8 @@ import com.webservices.ecommerce.exceptions.DatabaseException;
 import com.webservices.ecommerce.exceptions.ResourceNotFoundException;
 import com.webservices.ecommerce.repositories.ClienteRepository;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,14 +26,9 @@ public class ClienteService {
         this.clienteRepository = clienteRepository;
     }
 
-    public List<ClienteResponseDTO> findAll() {
-        List<Cliente> clientes = clienteRepository.findAll();
-        List<ClienteResponseDTO> clienteResponseDTOS = new ArrayList<>();
-
-        for (Cliente cliente : clientes) {
-            clienteResponseDTOS.add(new ClienteResponseDTO(cliente));
-        }
-        return clienteResponseDTOS;
+    public Page<ClienteResponseDTO> findAll(Pageable pageable) {
+        return clienteRepository.findAll(pageable)
+                .map(ClienteResponseDTO::new);
     }
 
     public ClienteResponseDTO findById(Long id) {

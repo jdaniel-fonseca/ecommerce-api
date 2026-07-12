@@ -12,6 +12,8 @@ import com.webservices.ecommerce.repositories.ProdutoRepository;
 import com.webservices.ecommerce.repositories.TagRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -32,13 +34,9 @@ public class ProdutoService {
         this.categoriaRepository = categoriaRepository;
     }
 
-    public List<ProdutoResponseDTO> findAll(){
-        List<Produto> produtos = produtoRepository.findAll();
-        List<ProdutoResponseDTO> produtosResponseDTO = new ArrayList<>();
-        for (Produto produto : produtos) {
-            produtosResponseDTO.add(new ProdutoResponseDTO(produto));
-        }
-        return produtosResponseDTO;
+    public Page<ProdutoResponseDTO> findAll(Pageable pageable) {
+        return produtoRepository.findAll(pageable)
+                .map(ProdutoResponseDTO::new);
     }
 
     public ProdutoResponseDTO findById(Long id) {

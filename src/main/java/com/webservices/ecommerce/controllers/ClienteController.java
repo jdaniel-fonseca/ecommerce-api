@@ -2,6 +2,9 @@ package com.webservices.ecommerce.controllers;
 import com.webservices.ecommerce.dto.request.ClienteRequestDTO;
 import com.webservices.ecommerce.dto.response.ClienteResponseDTO;
 import com.webservices.ecommerce.services.ClienteService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -19,8 +22,8 @@ public class ClienteController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ClienteResponseDTO>> listarClientes(){
-        List<ClienteResponseDTO> clientes = clienteService.findAll();
+    public ResponseEntity<Page<ClienteResponseDTO>> listarClientes(@PageableDefault(size = 30) Pageable pageable){
+        Page<ClienteResponseDTO> clientes = clienteService.findAll(pageable);
         return ResponseEntity.ok().body(clientes);
     }
 

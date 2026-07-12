@@ -9,6 +9,8 @@ import com.webservices.ecommerce.exceptions.DatabaseException;
 import com.webservices.ecommerce.exceptions.ResourceNotFoundException;
 import com.webservices.ecommerce.repositories.*;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,13 +32,9 @@ public class PedidoService {
         this.produtoRepository = produtoRepository;
     }
 
-    public List<PedidoResponseDTO> findAll() {
-        List<Pedido> pedidos = pedidoRepository.findAll();
-        List<PedidoResponseDTO> pedidoResponseDTOS = new ArrayList<>();
-        for (Pedido pedido : pedidos) {
-            pedidoResponseDTOS.add(new PedidoResponseDTO(pedido));
-        }
-        return pedidoResponseDTOS;
+    public Page<PedidoResponseDTO> findAll(Pageable pageable) {
+        return pedidoRepository.findAll(pageable)
+                .map(PedidoResponseDTO::new);
     }
 
     public PedidoResponseDTO findById(Long id) {

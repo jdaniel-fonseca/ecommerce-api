@@ -3,6 +3,9 @@ package com.webservices.ecommerce.controllers;
 import com.webservices.ecommerce.dto.request.PagamentoRequestDTO;
 import com.webservices.ecommerce.dto.response.PagamentoResponseDTO;
 import com.webservices.ecommerce.services.PagamentoService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -22,8 +25,8 @@ public class PagamentoCotroller {
     }
 
     @GetMapping
-    public ResponseEntity<List<PagamentoResponseDTO>> findAll() {
-        List<PagamentoResponseDTO> pagamentoResponseDTOS = pagamentoService.findAll();
+    public ResponseEntity<Page<PagamentoResponseDTO>> findAll(@PageableDefault(size = 30) Pageable pageable) {
+        Page<PagamentoResponseDTO> pagamentoResponseDTOS = pagamentoService.findAll(pageable);
         return ResponseEntity.ok().body(pagamentoResponseDTOS);
     }
 

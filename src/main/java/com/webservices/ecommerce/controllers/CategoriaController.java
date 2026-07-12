@@ -24,7 +24,7 @@ public class CategoriaController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<CategoriaResponseDTO>> findAll(@PageableDefault(size = 10, sort = "nome") Pageable pageable) {
+    public ResponseEntity<Page<CategoriaResponseDTO>> findAll(@PageableDefault(size = 30) Pageable pageable) {
         Page<CategoriaResponseDTO> categorias = categoriaService.findAll(pageable);
         return ResponseEntity.ok().body(categorias);
     }

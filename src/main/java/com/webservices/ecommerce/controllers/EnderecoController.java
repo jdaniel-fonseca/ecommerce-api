@@ -2,6 +2,9 @@ package com.webservices.ecommerce.controllers;
 import com.webservices.ecommerce.dto.request.EnderecoRequestDTO;
 import com.webservices.ecommerce.dto.response.EnderecoResponseDTO;
 import com.webservices.ecommerce.services.EnderecoService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -19,8 +22,8 @@ public class EnderecoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EnderecoResponseDTO>> getEnderecos() {
-        List<EnderecoResponseDTO> enderecoResponseDTOS = enderecoService.findAll();
+    public ResponseEntity<Page<EnderecoResponseDTO>> getEnderecos(@PageableDefault(size = 30) Pageable pageable) {
+        Page<EnderecoResponseDTO> enderecoResponseDTOS = enderecoService.findAll(pageable);
         return ResponseEntity.ok().body(enderecoResponseDTOS);
     }
 

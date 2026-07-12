@@ -29,7 +29,7 @@ public class CategoriaService {
     public Page<CategoriaResponseDTO> findAll(Pageable pageable) {
         return categoriaRepository
                 .findAll(pageable)
-                .map(this::responseDtoConverter);
+                .map(CategoriaResponseDTO::new);
     }
 
     public CategoriaResponseDTO findById(Long id) {

@@ -6,6 +6,8 @@ import com.webservices.ecommerce.exceptions.DatabaseException;
 import com.webservices.ecommerce.exceptions.ResourceNotFoundException;
 import com.webservices.ecommerce.repositories.EnderecoRepository;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,14 +23,9 @@ public class EnderecoService {
         this.enderecoRepository = enderecoRepository;
     }
 
-    public List<EnderecoResponseDTO> findAll() {
-        List<Endereco> enderecos = enderecoRepository.findAll();
-        List<EnderecoResponseDTO> enderecosResponseDTO = new ArrayList<>();
-
-        for(Endereco endereco : enderecos) {
-            enderecosResponseDTO.add(new EnderecoResponseDTO(endereco));
-        }
-        return enderecosResponseDTO;
+    public Page<EnderecoResponseDTO> findAll(Pageable pageable) {
+        return  enderecoRepository.findAll(pageable)
+                .map(EnderecoResponseDTO::new);
     }
 
     public EnderecoResponseDTO findById(Long id) {

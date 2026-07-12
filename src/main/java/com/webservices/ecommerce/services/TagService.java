@@ -8,6 +8,8 @@ import com.webservices.ecommerce.exceptions.ResourceNotFoundException;
 import com.webservices.ecommerce.repositories.TagRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,14 +24,9 @@ public class TagService {
         this.tagRepository = tagRepository;
     }
 
-    public List<TagResponseDTO> findAll() {
-        List<Tag> tags  = tagRepository.findAll();
-        List<TagResponseDTO> tagResponseDTOs = new ArrayList<>();
-
-        for (Tag tag : tags) {
-            tagResponseDTOs.add(new TagResponseDTO(tag));
-        }
-        return tagResponseDTOs;
+        public Page<TagResponseDTO> findAll(Pageable pageable) {
+        return tagRepository.findAll(pageable)
+                .map(TagResponseDTO::new);
     }
 
     public TagResponseDTO findById(Long id) {

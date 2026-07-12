@@ -11,6 +11,8 @@ import com.webservices.ecommerce.repositories.PagamentoRepository;
 import com.webservices.ecommerce.repositories.PedidoRepository;
 import jakarta.persistence.*;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,14 +29,9 @@ public class PagamentoService {
         this.pedidoRepository = pedidoRepository;
     }
 
-    public List<PagamentoResponseDTO> findAll() {
-        List<Pagamento> pagamentos = pagamentoRepository.findAll();
-        List<PagamentoResponseDTO> pagamentoResponseDTOS = new ArrayList<>();
-
-        for (Pagamento pagamento : pagamentos) {
-            pagamentoResponseDTOS.add(new PagamentoResponseDTO(pagamento));
-        }
-        return pagamentoResponseDTOS;
+    public Page<PagamentoResponseDTO> findAll(Pageable pageable) {
+        return pagamentoRepository.findAll(pageable)
+                .map(PagamentoResponseDTO::new);
     }
 
     public PagamentoResponseDTO findById(Long id) {
