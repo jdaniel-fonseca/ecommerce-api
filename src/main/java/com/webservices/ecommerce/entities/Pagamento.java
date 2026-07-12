@@ -1,5 +1,6 @@
 package com.webservices.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.webservices.ecommerce.enums.PaymentStatus;
 import jakarta.persistence.*;
 
@@ -15,7 +16,8 @@ public class Pagamento implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Instant momentoPagamento;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
+    private Instant momentoPagamento =  Instant.now();
     private BigDecimal valorPago;
     private Integer paymentStatus;
 
@@ -28,7 +30,6 @@ public class Pagamento implements Serializable {
 
     public Pagamento(Long id, BigDecimal valorPago, PaymentStatus paymentStatus, Pedido pedido) {
         this.id = id;
-        this.momentoPagamento = Instant.now();
         this.valorPago = valorPago;
         setPaymentStatus(paymentStatus);
         this.pedido = pedido;

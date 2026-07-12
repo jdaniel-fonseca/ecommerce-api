@@ -1,4 +1,5 @@
 package com.webservices.ecommerce.entities;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
@@ -17,6 +18,7 @@ public class Cliente implements Serializable {
     private String email;
     private String telefone;
     private String password;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant criadoEm;
 
     @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL)
