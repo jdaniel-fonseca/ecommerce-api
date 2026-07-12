@@ -24,9 +24,11 @@ public class ClienteResponseDTO {
         this.email = cliente.getEmail();
         this.telefone = cliente.getTelefone();
         this.criadoEm = cliente.getCriadoEm();
-        this.endereco = new EnderecoResponseDTO(cliente.getEndereco());
+        if (cliente.getEndereco() != null) {
+            this.endereco = new EnderecoResponseDTO(cliente.getEndereco());
+        }
+        else  {
+            this.endereco = null;
+        }
     }
-
-
-
 }

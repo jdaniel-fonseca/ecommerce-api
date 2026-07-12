@@ -1,6 +1,9 @@
 package com.webservices.ecommerce.config;
 
+import com.webservices.ecommerce.dto.request.ClienteRequestDTO;
 import com.webservices.ecommerce.dto.request.EnderecoRequestDTO;
+import com.webservices.ecommerce.entities.Cliente;
+import com.webservices.ecommerce.services.ClienteService;
 import com.webservices.ecommerce.services.EnderecoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -14,6 +17,9 @@ public class TestConfig implements CommandLineRunner {
     @Autowired
     private EnderecoService enderecoService;
 
+    @Autowired
+    private ClienteService clienteService;
+
     @Override
     public void run(String... args) throws Exception {
         EnderecoRequestDTO enderecoRequestDTO = new EnderecoRequestDTO();
@@ -22,14 +28,13 @@ public class TestConfig implements CommandLineRunner {
         enderecoRequestDTO.setCep("94566-192");
         enderecoRequestDTO.setNumero("356");
         enderecoRequestDTO.setRua("Rua Cristal");
-        enderecoService.create(enderecoRequestDTO);
 
-        EnderecoRequestDTO enderecoRequestDTO2 = new EnderecoRequestDTO();
-        enderecoRequestDTO2.setCidade("Osasco");
-        enderecoRequestDTO2.setEstado("São Paulo");
-        enderecoRequestDTO2.setCep("64566-192");
-        enderecoRequestDTO2.setNumero("226");
-        enderecoRequestDTO2.setRua("Rua Getúlio Vargas");
-        enderecoService.create(enderecoRequestDTO2);
+        ClienteRequestDTO clienteRequestDTO = new ClienteRequestDTO();
+        clienteRequestDTO.setEmail("jose@gmail.com");
+        clienteRequestDTO.setNome("Jose Daniel");
+        clienteRequestDTO.setSenha("senha@123");
+        clienteRequestDTO.setTelefone("11955949439");
+        clienteRequestDTO.setEnderecoRequestDTO(enderecoRequestDTO);
+        clienteService.create(clienteRequestDTO);
     }
 }

@@ -33,6 +33,5 @@ public class ClienteRequestDTO {
     private String senha;
 
     @Valid
-    @NotNull(message = "O endereço é obrigatório")
     private EnderecoRequestDTO enderecoRequestDTO;
 }

@@ -8,6 +8,7 @@ import com.webservices.ecommerce.entities.Endereco;
 import com.webservices.ecommerce.exceptions.DatabaseException;
 import com.webservices.ecommerce.exceptions.ResourceNotFoundException;
 import com.webservices.ecommerce.repositories.ClienteRepository;
+import com.webservices.ecommerce.repositories.EnderecoRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,9 +23,11 @@ import java.util.Optional;
 public class ClienteService {
 
     private final ClienteRepository clienteRepository;
+    private final EnderecoRepository enderecoRepository;
 
-    public ClienteService(ClienteRepository clienteRepository) {
+    public ClienteService(ClienteRepository clienteRepository,  EnderecoRepository enderecoRepository) {
         this.clienteRepository = clienteRepository;
+        this.enderecoRepository = enderecoRepository;
     }
 
     @Transactional(readOnly = true)
@@ -76,10 +79,21 @@ public class ClienteService {
 
     private Cliente convertClientRequest(ClienteRequestDTO clienteRequestDTO) {
         Cliente cliente = new Cliente();
+
         cliente.setName(clienteRequestDTO.getNome());
         cliente.setEmail(clienteRequestDTO.getEmail());
-        cliente.setEndereco(convertEnderecoRequest(clienteRequestDTO.getEnderecoRequestDTO()));
         cliente.setTelefone(clienteRequestDTO.getTelefone());
+        cliente.setPassword(clienteRequestDTO.getSenha());
+
+        if (clienteRequestDTO.getEnderecoRequestDTO() != null) {
+            Endereco endereco = convertEnderecoRequest(
+                    clienteRequestDTO.getEnderecoRequestDTO()
+            );
+
+            cliente.setEndereco(endereco);
+            endereco.setCliente(cliente);
+        }
+
         return cliente;
     }
 

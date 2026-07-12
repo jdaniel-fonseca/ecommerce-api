@@ -19,9 +19,9 @@ public class Cliente implements Serializable {
     private String telefone;
     private String password;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
-    private Instant criadoEm;
+    private Instant criadoEm =  Instant.now();
 
-    @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private Endereco endereco;
 
     @OneToMany(mappedBy = "cliente")
@@ -36,7 +36,6 @@ public class Cliente implements Serializable {
         this.name = name;
         this.email = email;
         this.telefone = telefone;
-        this.criadoEm = Instant.now();
         this.password = password;
         this.endereco = endereco;
     }
