@@ -32,11 +32,13 @@ public class PedidoService {
         this.produtoRepository = produtoRepository;
     }
 
+    @Transactional(readOnly = true)
     public Page<PedidoResponseDTO> findAll(Pageable pageable) {
         return pedidoRepository.findAll(pageable)
                 .map(PedidoResponseDTO::new);
     }
 
+    @Transactional(readOnly = true)
     public PedidoResponseDTO findById(Long id) {
         Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));

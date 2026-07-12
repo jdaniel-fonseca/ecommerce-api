@@ -32,6 +32,7 @@ public class CategoriaService {
                 .map(CategoriaResponseDTO::new);
     }
 
+    @Transactional(readOnly = true)
     public CategoriaResponseDTO findById(Long id) {
         Categoria categoria = this.categoriaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Categoria não encontrado."));
@@ -39,12 +40,14 @@ public class CategoriaService {
         return new CategoriaResponseDTO(categoria);
     }
 
+    @Transactional
     public CategoriaResponseDTO create(CategoriaRequestDTO categoriaRequestDTO) {
         Categoria categoria = requestDtoConverter(categoriaRequestDTO);
         Categoria categoriaSalvo = categoriaRepository.save(categoria);
         return responseDtoConverter(categoriaSalvo);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         try {
         Categoria categoria = categoriaRepository.findById(id)
@@ -56,6 +59,7 @@ public class CategoriaService {
 
     }
 
+    @Transactional
     public CategoriaResponseDTO update(CategoriaRequestDTO categoriaRequestDTO, Long id){
         Categoria categoria = categoriaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));

@@ -14,6 +14,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +30,13 @@ public class PagamentoService {
         this.pedidoRepository = pedidoRepository;
     }
 
+    @Transactional(readOnly = true)
     public Page<PagamentoResponseDTO> findAll(Pageable pageable) {
         return pagamentoRepository.findAll(pageable)
                 .map(PagamentoResponseDTO::new);
     }
 
+    @Transactional(readOnly = true)
     public PagamentoResponseDTO findById(Long id) {
         Pagamento pagamento = pagamentoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
@@ -41,6 +44,7 @@ public class PagamentoService {
         return new PagamentoResponseDTO(pagamento);
     }
 
+    @Transactional
     public PagamentoResponseDTO update(PagamentoRequestDTO pagamentoRequestDTO, Long id) {
         Pagamento pagamento = pagamentoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
@@ -49,12 +53,14 @@ public class PagamentoService {
         return new PagamentoResponseDTO(pagamento);
     }
 
+    @Transactional
     public PagamentoResponseDTO create(PagamentoRequestDTO pagamentoRequestDTO) {
         Pagamento pagamento = convertRequestDto(pagamentoRequestDTO);
         Pagamento pagamentoSalvo = pagamentoRepository.save(pagamento);
         return new PagamentoResponseDTO(pagamentoSalvo);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         try {
             Pagamento pagamento = pagamentoRepository.findById(id)

@@ -12,6 +12,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +27,13 @@ public class ClienteService {
         this.clienteRepository = clienteRepository;
     }
 
+    @Transactional(readOnly = true)
     public Page<ClienteResponseDTO> findAll(Pageable pageable) {
         return clienteRepository.findAll(pageable)
                 .map(ClienteResponseDTO::new);
     }
 
+    @Transactional(readOnly = true)
     public ClienteResponseDTO findById(Long id) {
         Optional<Cliente> cliente = clienteRepository.findById(id);
         if (cliente.isPresent()) {
@@ -39,12 +42,14 @@ public class ClienteService {
         return null;
     }
 
+    @Transactional
     public ClienteResponseDTO create(ClienteRequestDTO clienteRequestDTO) {
         Cliente cliente = convertClientRequest(clienteRequestDTO);
         Cliente clienteSalvo = clienteRepository.save(cliente);
         return new ClienteResponseDTO(clienteSalvo);
     }
 
+    @Transactional
     public ClienteResponseDTO update(ClienteRequestDTO clienteRequestDTO, Long id) {
         Cliente cliente = clienteRepository.findById(id).orElse(null);
         updateData(clienteRequestDTO, cliente);
@@ -52,6 +57,7 @@ public class ClienteService {
         return new ClienteResponseDTO(clienteSalvo);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         try {
             Cliente cliente = clienteRepository.findById(id)

@@ -15,6 +15,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,17 +35,20 @@ public class ProdutoService {
         this.categoriaRepository = categoriaRepository;
     }
 
+    @Transactional(readOnly = true)
     public Page<ProdutoResponseDTO> findAll(Pageable pageable) {
         return produtoRepository.findAll(pageable)
                 .map(ProdutoResponseDTO::new);
     }
 
+    @Transactional(readOnly = true)
     public ProdutoResponseDTO findById(Long id) {
         Produto produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
         return new ProdutoResponseDTO(produto);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         try {
             Produto produto = produtoRepository.findById(id)
@@ -60,6 +64,7 @@ public class ProdutoService {
         }
     }
 
+    @Transactional
     public ProdutoResponseDTO update(ProdutoRequestDTO produtoRequestDTO, Long id) {
         Produto produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
@@ -68,6 +73,7 @@ public class ProdutoService {
         return new  ProdutoResponseDTO(produto);
     }
 
+    @Transactional
     public ProdutoResponseDTO create(ProdutoRequestDTO produtoRequestDTO) {
         Produto produto = produtoRepository.save(convertRequestDTOtoEntity(produtoRequestDTO));
         return new ProdutoResponseDTO(produto);

@@ -10,9 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CategoriaRequestDTO {
 
-    @NotEmpty
+    @NotEmpty(message = "O nome é obrigatório.")
     private String nome;
-    @NotEmpty
+
+    @NotEmpty(message = "A descrição é obrigatória.")
     private String descricao;
 
 }

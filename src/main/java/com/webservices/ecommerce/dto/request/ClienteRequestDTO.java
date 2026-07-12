@@ -1,8 +1,10 @@
 package com.webservices.ecommerce.dto.request;
+
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,16 +14,25 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ClienteRequestDTO {
 
-    @NotEmpty
+    @NotBlank(message = "O nome é obrigatório")
     private String nome;
-    @NotEmpty
-    @Email
+
+    @NotBlank(message = "O e-mail é obrigatório")
+    @Email(message = "Informe um e-mail válido")
     private String email;
-    @NotEmpty
+
+    @NotBlank(message = "O telefone é obrigatório")
     private String telefone;
-    @NotEmpty
-    @Min(7)
-    @Max(100)
+
+    @NotBlank(message = "A senha é obrigatória")
+    @Size(
+            min = 7,
+            max = 100,
+            message = "A senha deve ter entre 7 e 100 caracteres"
+    )
     private String senha;
+
+    @Valid
+    @NotNull(message = "O endereço é obrigatório")
     private EnderecoRequestDTO enderecoRequestDTO;
 }
