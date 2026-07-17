@@ -1,5 +1,6 @@
 package com.webservices.ecommerce.controllers;
 
+import com.webservices.ecommerce.config.security.TokenJson;
 import com.webservices.ecommerce.config.security.TokenService;
 import com.webservices.ecommerce.dto.autenticacao.AutenticacaoDTO;
 import com.webservices.ecommerce.entities.Cliente;
@@ -21,20 +22,15 @@ public class AutenticacaoController {
     private AuthenticationManager authenticationManager;
 
     @PostMapping
-    public ResponseEntity<?> efetuarLogin(@RequestBody AutenticacaoDTO autenticacaoDTO) {
+    public ResponseEntity efetuarLogin(@RequestBody @Valid AutenticacaoDTO autenticacaoDTO) {
+        var token = new UsernamePasswordAuthenticationToken(autenticacaoDTO.getEmail(), autenticacaoDTO.getSenha());
+        var auth = authenticationManager.authenticate(token);
 
-        var authenticationToken = new UsernamePasswordAuthenticationToken(
-                autenticacaoDTO.getEmail(),
-                autenticacaoDTO.getSenha()
-        );
-
-        var authentication = authenticationManager.authenticate(authenticationToken);
-
-        Cliente cliente = (Cliente) authentication.getPrincipal();
+        Cliente cliente = (Cliente) auth.getPrincipal();
 
         var tokenJWT = tokenService.generateToken(cliente.getEmail());
 
-        return ResponseEntity.ok(tokenJWT);
+        return ResponseEntity.ok(new TokenJson(tokenJWT));
     }
 
 }
