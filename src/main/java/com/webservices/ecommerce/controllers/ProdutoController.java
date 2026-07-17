@@ -1,13 +1,12 @@
 package com.webservices.ecommerce.controllers;
 
-import com.webservices.ecommerce.dto.request.PedidoRequestDTO;
 import com.webservices.ecommerce.dto.request.ProdutoRequestDTO;
-import com.webservices.ecommerce.dto.response.PedidoResponseDTO;
 import com.webservices.ecommerce.dto.response.ProdutoResponseDTO;
 import com.webservices.ecommerce.services.ProdutoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 
 import java.net.URI;
 import java.util.List;
@@ -55,5 +54,4 @@ public class ProdutoController {
         produtoService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
 }
