@@ -2,7 +2,6 @@ package com.webservices.ecommerce.services;
 
 import com.webservices.ecommerce.dto.request.ProdutoRequestDTO;
 import com.webservices.ecommerce.dto.response.ProdutoResponseDTO;
-import com.webservices.ecommerce.dto.response.TagResponseDTO;
 import com.webservices.ecommerce.entities.Categoria;
 import com.webservices.ecommerce.entities.Produto;
 import com.webservices.ecommerce.entities.Tag;
@@ -13,7 +12,10 @@ import com.webservices.ecommerce.repositories.ProdutoRepository;
 import com.webservices.ecommerce.repositories.TagRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,21 +35,20 @@ public class ProdutoService {
         this.categoriaRepository = categoriaRepository;
     }
 
-    public List<ProdutoResponseDTO> findAll(){
-        List<Produto> produtos = produtoRepository.findAll();
-        List<ProdutoResponseDTO> produtosResponseDTO = new ArrayList<>();
-        for (Produto produto : produtos) {
-            produtosResponseDTO.add(new ProdutoResponseDTO(produto));
-        }
-        return produtosResponseDTO;
+    @Transactional(readOnly = true)
+    public Page<ProdutoResponseDTO> findAll(Pageable pageable) {
+        return produtoRepository.findAll(pageable)
+                .map(ProdutoResponseDTO::new);
     }
 
+    @Transactional(readOnly = true)
     public ProdutoResponseDTO findById(Long id) {
         Produto produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
         return new ProdutoResponseDTO(produto);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         try {
             Produto produto = produtoRepository.findById(id)
@@ -63,6 +64,7 @@ public class ProdutoService {
         }
     }
 
+    @Transactional
     public ProdutoResponseDTO update(ProdutoRequestDTO produtoRequestDTO, Long id) {
         Produto produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
@@ -71,6 +73,7 @@ public class ProdutoService {
         return new  ProdutoResponseDTO(produto);
     }
 
+    @Transactional
     public ProdutoResponseDTO create(ProdutoRequestDTO produtoRequestDTO) {
         Produto produto = produtoRepository.save(convertRequestDTOtoEntity(produtoRequestDTO));
         return new ProdutoResponseDTO(produto);

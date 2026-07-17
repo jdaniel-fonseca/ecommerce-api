@@ -3,6 +3,9 @@ package com.webservices.ecommerce.controllers;
 import com.webservices.ecommerce.dto.request.TagRequestDTO;
 import com.webservices.ecommerce.dto.response.TagResponseDTO;
 import com.webservices.ecommerce.services.TagService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -21,8 +24,8 @@ public class TagController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TagResponseDTO>> findAll() {
-        List<TagResponseDTO> tags = tagService.findAll();
+    public ResponseEntity<Page<TagResponseDTO>> findAll(@PageableDefault(size = 30) Pageable pageable) {
+        Page<TagResponseDTO> tags = tagService.findAll(pageable);
         return ResponseEntity.ok().body(tags);
     }
 

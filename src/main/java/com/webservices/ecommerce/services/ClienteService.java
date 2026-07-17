@@ -8,8 +8,12 @@ import com.webservices.ecommerce.entities.Endereco;
 import com.webservices.ecommerce.exceptions.DatabaseException;
 import com.webservices.ecommerce.exceptions.ResourceNotFoundException;
 import com.webservices.ecommerce.repositories.ClienteRepository;
+import com.webservices.ecommerce.repositories.EnderecoRepository;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,21 +23,20 @@ import java.util.Optional;
 public class ClienteService {
 
     private final ClienteRepository clienteRepository;
+    private final EnderecoRepository enderecoRepository;
 
-    public ClienteService(ClienteRepository clienteRepository) {
+    public ClienteService(ClienteRepository clienteRepository,  EnderecoRepository enderecoRepository) {
         this.clienteRepository = clienteRepository;
+        this.enderecoRepository = enderecoRepository;
     }
 
-    public List<ClienteResponseDTO> findAll() {
-        List<Cliente> clientes = clienteRepository.findAll();
-        List<ClienteResponseDTO> clienteResponseDTOS = new ArrayList<>();
-
-        for (Cliente cliente : clientes) {
-            clienteResponseDTOS.add(new ClienteResponseDTO(cliente));
-        }
-        return clienteResponseDTOS;
+    @Transactional(readOnly = true)
+    public Page<ClienteResponseDTO> findAll(Pageable pageable) {
+        return clienteRepository.findAll(pageable)
+                .map(ClienteResponseDTO::new);
     }
 
+    @Transactional(readOnly = true)
     public ClienteResponseDTO findById(Long id) {
         Optional<Cliente> cliente = clienteRepository.findById(id);
         if (cliente.isPresent()) {
@@ -42,12 +45,14 @@ public class ClienteService {
         return null;
     }
 
+    @Transactional
     public ClienteResponseDTO create(ClienteRequestDTO clienteRequestDTO) {
         Cliente cliente = convertClientRequest(clienteRequestDTO);
         Cliente clienteSalvo = clienteRepository.save(cliente);
         return new ClienteResponseDTO(clienteSalvo);
     }
 
+    @Transactional
     public ClienteResponseDTO update(ClienteRequestDTO clienteRequestDTO, Long id) {
         Cliente cliente = clienteRepository.findById(id).orElse(null);
         updateData(clienteRequestDTO, cliente);
@@ -55,6 +60,7 @@ public class ClienteService {
         return new ClienteResponseDTO(clienteSalvo);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         try {
             Cliente cliente = clienteRepository.findById(id)
@@ -73,10 +79,21 @@ public class ClienteService {
 
     private Cliente convertClientRequest(ClienteRequestDTO clienteRequestDTO) {
         Cliente cliente = new Cliente();
+
         cliente.setName(clienteRequestDTO.getNome());
         cliente.setEmail(clienteRequestDTO.getEmail());
-        cliente.setEndereco(convertEnderecoRequest(clienteRequestDTO.getEnderecoRequestDTO()));
         cliente.setTelefone(clienteRequestDTO.getTelefone());
+        cliente.setPassword(clienteRequestDTO.getSenha());
+
+        if (clienteRequestDTO.getEnderecoRequestDTO() != null) {
+            Endereco endereco = convertEnderecoRequest(
+                    clienteRequestDTO.getEnderecoRequestDTO()
+            );
+
+            cliente.setEndereco(endereco);
+            endereco.setCliente(cliente);
+        }
+
         return cliente;
     }
 

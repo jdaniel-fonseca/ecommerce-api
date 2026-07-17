@@ -3,6 +3,10 @@ package com.webservices.ecommerce.controllers;
 import com.webservices.ecommerce.dto.request.CategoriaRequestDTO;
 import com.webservices.ecommerce.dto.response.CategoriaResponseDTO;
 import com.webservices.ecommerce.services.CategoriaService;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -21,8 +25,8 @@ public class CategoriaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoriaResponseDTO>> findAll() {
-        List<CategoriaResponseDTO> categorias = categoriaService.findAll();
+    public ResponseEntity<Page<CategoriaResponseDTO>> findAll(@PageableDefault(size = 30) Pageable pageable) {
+        Page<CategoriaResponseDTO> categorias = categoriaService.findAll(pageable);
         return ResponseEntity.ok().body(categorias);
     }
 
@@ -33,13 +37,13 @@ public class CategoriaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoriaResponseDTO> update(@PathVariable Long id, @RequestBody CategoriaRequestDTO categoriaRequestDTO) {
+    public ResponseEntity<CategoriaResponseDTO> update(@PathVariable Long id, @Valid @RequestBody CategoriaRequestDTO categoriaRequestDTO) {
         CategoriaResponseDTO categoria = categoriaService.update(categoriaRequestDTO, id);
         return ResponseEntity.ok().body(categoria);
     }
 
     @PostMapping
-    public ResponseEntity<CategoriaResponseDTO> insert(@RequestBody CategoriaRequestDTO categoriaRequestDTO) {
+    public ResponseEntity<CategoriaResponseDTO> insert(@Valid @RequestBody CategoriaRequestDTO categoriaRequestDTO) {
         CategoriaResponseDTO categoriaResponseDTO = categoriaService.create(categoriaRequestDTO);
         URI uri =  ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

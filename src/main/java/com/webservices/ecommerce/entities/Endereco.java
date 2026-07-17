@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Endereco implements Serializable {
 
     @Id
-    @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String rua;
     private String numero;

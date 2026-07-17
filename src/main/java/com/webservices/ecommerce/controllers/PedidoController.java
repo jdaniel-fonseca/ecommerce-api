@@ -3,6 +3,9 @@ package com.webservices.ecommerce.controllers;
 import com.webservices.ecommerce.dto.request.PedidoRequestDTO;
 import com.webservices.ecommerce.dto.response.PedidoResponseDTO;
 import com.webservices.ecommerce.services.PedidoService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -21,8 +24,8 @@ public class PedidoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PedidoResponseDTO>> findAll() {
-        List<PedidoResponseDTO> pedidoResponseDTOS = pedidoService.findAll();
+    public ResponseEntity<Page<PedidoResponseDTO>> findAll(@PageableDefault(size = 30) Pageable pageable) {
+        Page<PedidoResponseDTO> pedidoResponseDTOS = pedidoService.findAll(pageable);
         return ResponseEntity.ok().body(pedidoResponseDTOS);
     }
 

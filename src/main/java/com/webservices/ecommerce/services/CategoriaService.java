@@ -7,10 +7,11 @@ import com.webservices.ecommerce.exceptions.DatabaseException;
 import com.webservices.ecommerce.exceptions.ResourceNotFoundException;
 import com.webservices.ecommerce.repositories.CategoriaRepository;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class CategoriaService {
@@ -21,16 +22,15 @@ public class CategoriaService {
         this.categoriaRepository = categoriaRepository;
     }
 
-    public List<CategoriaResponseDTO> findAll() {
-        List<Categoria> categorias = categoriaRepository.findAll();
-        List<CategoriaResponseDTO> categoriaResponseDTO = new ArrayList<>();
 
-        for(Categoria categoria : categorias) {
-            categoriaResponseDTO.add(responseDtoConverter(categoria));
-        }
-        return categoriaResponseDTO;
+    @Transactional(readOnly = true)
+    public Page<CategoriaResponseDTO> findAll(Pageable pageable) {
+        return categoriaRepository
+                .findAll(pageable)
+                .map(CategoriaResponseDTO::new);
     }
 
+    @Transactional(readOnly = true)
     public CategoriaResponseDTO findById(Long id) {
         Categoria categoria = this.categoriaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Categoria não encontrado."));
@@ -38,12 +38,14 @@ public class CategoriaService {
         return new CategoriaResponseDTO(categoria);
     }
 
+    @Transactional
     public CategoriaResponseDTO create(CategoriaRequestDTO categoriaRequestDTO) {
         Categoria categoria = requestDtoConverter(categoriaRequestDTO);
         Categoria categoriaSalvo = categoriaRepository.save(categoria);
         return responseDtoConverter(categoriaSalvo);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         try {
         Categoria categoria = categoriaRepository.findById(id)
@@ -55,6 +57,7 @@ public class CategoriaService {
 
     }
 
+    @Transactional
     public CategoriaResponseDTO update(CategoriaRequestDTO categoriaRequestDTO, Long id){
         Categoria categoria = categoriaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));

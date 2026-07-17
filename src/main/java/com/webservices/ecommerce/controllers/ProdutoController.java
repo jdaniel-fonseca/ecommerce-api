@@ -3,6 +3,9 @@ package com.webservices.ecommerce.controllers;
 import com.webservices.ecommerce.dto.request.ProdutoRequestDTO;
 import com.webservices.ecommerce.dto.response.ProdutoResponseDTO;
 import com.webservices.ecommerce.services.ProdutoService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -22,8 +25,8 @@ public class ProdutoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProdutoResponseDTO>> findAll() {
-        List<ProdutoResponseDTO> produtoResponseDTOS = produtoService.findAll();
+    public ResponseEntity<Page<ProdutoResponseDTO>> findAll(@PageableDefault(size = 30) Pageable pageable) {
+        Page<ProdutoResponseDTO> produtoResponseDTOS = produtoService.findAll(pageable);
         return ResponseEntity.ok().body(produtoResponseDTOS);
     }
     @GetMapping("/{id}")
