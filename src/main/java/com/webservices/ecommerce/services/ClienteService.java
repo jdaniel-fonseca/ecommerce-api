@@ -9,9 +9,11 @@ import com.webservices.ecommerce.exceptions.DatabaseException;
 import com.webservices.ecommerce.exceptions.ResourceNotFoundException;
 import com.webservices.ecommerce.repositories.ClienteRepository;
 import com.webservices.ecommerce.repositories.EnderecoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +23,9 @@ import java.util.Optional;
 
 @Service
 public class ClienteService {
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     private final ClienteRepository clienteRepository;
     private final EnderecoRepository enderecoRepository;
@@ -83,7 +88,7 @@ public class ClienteService {
         cliente.setName(clienteRequestDTO.getNome());
         cliente.setEmail(clienteRequestDTO.getEmail());
         cliente.setTelefone(clienteRequestDTO.getTelefone());
-        cliente.setPassword(clienteRequestDTO.getSenha());
+        cliente.setPassword(passwordEncoder.encode(clienteRequestDTO.getSenha()));
 
         if (clienteRequestDTO.getEnderecoRequestDTO() != null) {
             Endereco endereco = convertEnderecoRequest(
@@ -111,6 +116,7 @@ public class ClienteService {
         cliente.setName(clienteRequestDTO.getNome());
         cliente.setEmail(clienteRequestDTO.getEmail());
         cliente.setTelefone(clienteRequestDTO.getTelefone());
+        cliente.setPassword(passwordEncoder.encode(clienteRequestDTO.getSenha()));
         cliente.setEndereco(convertEnderecoRequest(clienteRequestDTO.getEnderecoRequestDTO()));
     }
 }

@@ -2,6 +2,7 @@ package com.webservices.ecommerce.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,11 +19,29 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                // Desabilita o CSRF (Proteção desnecessária em autenticação com JWT pois o Token já protege)
+                // Desabilita CSRF
                 .csrf(csrf -> csrf.disable())
 
-                //Desabilita o processo de autenticação Stateful e avisa o Spring que deve mudar para Stateless
-                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // Permite o H2 Console abrir em frame
+                .headers(headers -> headers
+                        .frameOptions(frame -> frame.sameOrigin())
+                )
+
+                // Define que a API será stateless
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+
+                // Libera rotas públicas e protege o resto
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/login").permitAll()
+                        .anyRequest().authenticated()
+                )
+
+                .formLogin(form -> form.disable())
+                .httpBasic(httpBasic -> httpBasic.disable())
+
                 .build();
     }
 
@@ -38,3 +57,4 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
+

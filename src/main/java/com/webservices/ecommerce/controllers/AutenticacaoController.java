@@ -2,6 +2,7 @@ package com.webservices.ecommerce.controllers;
 
 import com.webservices.ecommerce.config.security.TokenService;
 import com.webservices.ecommerce.dto.autenticacao.AutenticacaoDTO;
+import com.webservices.ecommerce.entities.Cliente;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +21,20 @@ public class AutenticacaoController {
     private AuthenticationManager authenticationManager;
 
     @PostMapping
-    public ResponseEntity efetuarLogin(@RequestBody @Valid AutenticacaoDTO autenticacaoDTO) {
-        var token = new UsernamePasswordAuthenticationToken(autenticacaoDTO.getEmail(), autenticacaoDTO.getSenha());
-        var auth = authenticationManager.authenticate(token);
-        return ResponseEntity.ok(tokenService.generateToken((AutenticacaoDTO) auth.getPrincipal()));
+    public ResponseEntity<?> efetuarLogin(@RequestBody AutenticacaoDTO autenticacaoDTO) {
+
+        var authenticationToken = new UsernamePasswordAuthenticationToken(
+                autenticacaoDTO.getEmail(),
+                autenticacaoDTO.getSenha()
+        );
+
+        var authentication = authenticationManager.authenticate(authenticationToken);
+
+        Cliente cliente = (Cliente) authentication.getPrincipal();
+
+        var tokenJWT = tokenService.generateToken(cliente.getEmail());
+
+        return ResponseEntity.ok(tokenJWT);
     }
 
 }
