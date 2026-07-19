@@ -21,9 +21,6 @@ public class TestConfig implements CommandLineRunner {
     @Autowired
     private ClienteService clienteService;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
     @Override
     public void run(String... args) throws Exception {
         EnderecoRequestDTO enderecoRequestDTO = new EnderecoRequestDTO();
