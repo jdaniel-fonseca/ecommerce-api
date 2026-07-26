@@ -2,7 +2,6 @@ package com.webservices.ecommerce.config.security;
 
 
 import com.webservices.ecommerce.repositories.ClienteRepository;
-import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
