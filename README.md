@@ -2,42 +2,43 @@
 
 # 🛒 E-commerce API
 
-**API REST para explorar operações e regras de negócio de um sistema de comércio eletrônico.**
+API REST para praticar regras de negócio e integrações de um e-commerce.
 
 ![Java](https://img.shields.io/badge/Java-17-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.1.0-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Driver-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-4-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
 ![Status](https://img.shields.io/badge/Status-Em_desenvolvimento-yellow?style=for-the-badge)
 
 </div>
 
-## 📖 Sobre o projeto
+## Sobre
 
-A **E-commerce API** é um projeto back-end em desenvolvimento voltado ao domínio de comércio eletrônico. A proposta é evoluir uma aplicação Spring Boot com regras de negócio, persistência, segurança e integrações externas.
+API sendo desenvolvida para trabalhar com cenários de e-commerce e aprofundar meus conhecimentos em Java / Spring Boot, persistência de dados, segurança e regras de negócio.
 
-> 🚧 **Projeto em desenvolvimento.** A presença de uma dependência no projeto não significa que a funcionalidade correspondente esteja concluída.
+O projeto ainda está em desenvolvimento; as próximas funcionalidades estão listadas abaixo.
 
-## 🛠️ Tecnologias
+## Tecnologias
 
-Dependências identificadas no `pom.xml`:
+- Java 17
+- Spring Boot 4
+- Spring Web MVC e Spring Data JPA
+- Bean Validation
+- Spring Security e biblioteca Java JWT (**dependências presentes; autenticação JWT ainda não concluída**)
+- Springdoc OpenAPI (**dependência presente; documentação ainda será revisada**)
+- Maven e Lombok
+- PostgreSQL (driver presente; **será o banco adotado no projeto**)
+- H2 (driver também presente)
 
-- **Java 17** e **Spring Boot 4.1.0**
-- **Spring Web MVC** e **Spring Data JPA**
-- **PostgreSQL** e **H2** (drivers declarados)
-- **Spring Security** e biblioteca **Auth0 Java JWT** (dependências presentes; fluxo JWT ainda não concluído)
-- **Bean Validation**
-- **Springdoc OpenAPI** (dependência de documentação de API)
-- **Lombok** e **Maven**
+## Próximos passos
 
-## 🧩 Domínio e evolução
+- [ ] Consolidar as regras de negócio de produtos, pedidos e estoque
+- [ ] Concluir autenticação e autorização com JWT
+- [ ] Configurar e revisar a documentação Swagger / OpenAPI
+- [ ] Adicionar envio de e-mails transacionais (como confirmação de pedido)
+- [ ] Criar testes unitários e de integração
+- [ ] Preparar Docker e Docker Compose
+- [ ] Fazer deploy na AWS
 
-A proposta da API é servir como base para operações de comércio eletrônico. Os casos de uso e endpoints já implementados serão detalhados após a revisão dos controllers e serviços.
-
-<!-- TODO: preencher os endpoints e funcionalidades implementadas, sem confundir com o roadmap. -->
-
-## ▶️ Como executar
-
-**Pré-requisitos:** JDK 17 e banco configurado conforme os arquivos da aplicação.
+## Como executar
 
 ```bash
 git clone https://github.com/jdaniel-fonseca/ecommerce-api.git
@@ -45,23 +46,10 @@ cd ecommerce-api
 ./mvnw spring-boot:run
 ```
 
-No Windows, utilize `mvnw.cmd spring-boot:run`.
+No Windows, utilize `mvnw.cmd spring-boot:run`. Confira os perfis e as propriedades de conexão em `src/main/resources` antes de iniciar.
 
-> Verifique os perfis e configurações de banco em `src/main/resources`. A execução não foi validada neste ambiente.
+> Os endpoints e os exemplos de requisição serão documentados conforme eu consolidar as funcionalidades.
 
-## 🗺️ Roadmap
+## Autor
 
-- [ ] Concluir autenticação e autorização com JWT
-- [ ] Implementar notificações de e-mail transacionais (por exemplo, confirmação de pedido)
-- [ ] Ampliar testes unitários e de integração
-- [ ] Documentar endpoints, exemplos de payload e respostas
-- [ ] Preparar Docker e Docker Compose
-- [ ] Fazer deploy na AWS
-
-**Ideia de integração de e-mail:** utilizar Spring Mail com um provedor SMTP ou Amazon SES, mantendo credenciais em variáveis de ambiente.
-
-## 👨🏽‍💻 Autor
-
-Desenvolvido por **José Daniel de Oliveira Fonseca**.
-
-[GitHub](https://github.com/jdaniel-fonseca) · [Repositório](https://github.com/jdaniel-fonseca/ecommerce-api)
+[José Daniel](https://github.com/jdaniel-fonseca)
