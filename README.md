@@ -2,7 +2,7 @@
 
 # 🛒 E-commerce API
 
-API REST para praticar regras de negócio e integrações de um e-commerce.
+API REST sendo construída para praticar regras de negócio e integrações de um e-commerce.
 
 ![Java](https://img.shields.io/badge/Java-17-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-4-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
