@@ -6,7 +6,6 @@ API REST sendo construída para praticar regras de negócio e integrações de u
 
 ![Java](https://img.shields.io/badge/Java-17-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-4-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
-![Status](https://img.shields.io/badge/Status-Em_desenvolvimento-yellow?style=for-the-badge)
 
 </div>
 
@@ -14,7 +13,6 @@ API REST sendo construída para praticar regras de negócio e integrações de u
 
 API sendo desenvolvida para trabalhar com cenários de e-commerce e aprofundar meus conhecimentos em Java / Spring Boot, persistência de dados, segurança e regras de negócio.
 
-O projeto ainda está em desenvolvimento; as próximas funcionalidades estão listadas abaixo.
 
 ## Tecnologias
 
